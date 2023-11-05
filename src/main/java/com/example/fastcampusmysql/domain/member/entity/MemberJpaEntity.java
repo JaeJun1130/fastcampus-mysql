@@ -16,8 +16,8 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "Member")
-public class Member {
+@Table(name = "member")
+public class MemberJpaEntity {
     private final static Long NAME_MAX_LENGTH = 10L;
 
     @Id
@@ -30,7 +30,7 @@ public class Member {
     private LocalDateTime createdAt;
 
     @Builder
-    public Member(Long id, String nickname, String email, LocalDate birthday, LocalDateTime createdAt) {
+    public MemberJpaEntity(Long id, String nickname, String email, LocalDate birthday, LocalDateTime createdAt) {
         validationNickname(nickname);
 
         this.id = id;
@@ -42,8 +42,8 @@ public class Member {
         this.createdAt = createdAt == null ? LocalDateTime.now() : createdAt;
     }
 
-    public static Member of(RegisterMemberCommand registerMemberCommand) {
-        return Member.builder()
+    public static MemberJpaEntity of(RegisterMemberCommand registerMemberCommand) {
+        return MemberJpaEntity.builder()
                 .nickname(registerMemberCommand.nickname())
                 .email(registerMemberCommand.email())
                 .birthday(registerMemberCommand.birthday())

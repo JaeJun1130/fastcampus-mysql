@@ -1,6 +1,6 @@
 package com.example.fastcampusmysql.domain.member.repository;
 
-import com.example.fastcampusmysql.domain.member.entity.Member;
+import com.example.fastcampusmysql.domain.member.entity.MemberJpaEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -21,13 +21,13 @@ public class MemberJdbcTemplateRepository {
     private static final String TABLE = "member";
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public Optional<Member> findById(Long id) {
+    public Optional<MemberJpaEntity> findById(Long id) {
         String sql = String.format("SELECT * FROM %s WHERE id = :id", TABLE);
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("id", id);
 
-        RowMapper<Member> memberRowMapper = (ResultSet resultSet, int rowNum) ->
-                Member.builder()
+        RowMapper<MemberJpaEntity> memberRowMapper = (ResultSet resultSet, int rowNum) ->
+                MemberJpaEntity.builder()
                         .id(resultSet.getLong("id"))
                         .email(resultSet.getString("email"))
                         .nickname(resultSet.getString("nickname"))
@@ -35,38 +35,38 @@ public class MemberJdbcTemplateRepository {
                         .createdAt(resultSet.getObject("createAt", LocalDateTime.class))
                         .build();
 
-        Member member = namedParameterJdbcTemplate.queryForObject(sql, parameterSource, memberRowMapper);
+        MemberJpaEntity memberJpaEntity = namedParameterJdbcTemplate.queryForObject(sql, parameterSource, memberRowMapper);
 
-        return Optional.ofNullable(member);
+        return Optional.ofNullable(memberJpaEntity);
     }
 
-    public Member save(Member member) {
-        if (member.getId() == null) {
-            return this.insert(member);
+    public MemberJpaEntity save(MemberJpaEntity memberJpaEntity) {
+        if (memberJpaEntity.getId() == null) {
+            return this.insert(memberJpaEntity);
         }
 
-        return this.update(member);
+        return this.update(memberJpaEntity);
     }
 
-    private Member insert(Member member) {
+    private MemberJpaEntity insert(MemberJpaEntity memberJpaEntity) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(namedParameterJdbcTemplate.getJdbcTemplate())
                 .withTableName(TABLE)
                 .usingGeneratedKeyColumns("id");
 
-        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(member);
+        SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(memberJpaEntity);
         Number number = simpleJdbcInsert.executeAndReturnKey(parameterSource);
         System.out.println("number = " + number);
 
-        return Member.builder()
+        return MemberJpaEntity.builder()
                 .id(1L)
-                .nickname(member.getNickname())
-                .email(member.getEmail())
-                .birthday(member.getBirthday())
+                .nickname(memberJpaEntity.getNickname())
+                .email(memberJpaEntity.getEmail())
+                .birthday(memberJpaEntity.getBirthday())
                 .createdAt(LocalDateTime.now())
                 .build();
     }
 
-    private Member update(Member member) {
-        return member;
+    private MemberJpaEntity update(MemberJpaEntity memberJpaEntity) {
+        return memberJpaEntity;
     }
 }
