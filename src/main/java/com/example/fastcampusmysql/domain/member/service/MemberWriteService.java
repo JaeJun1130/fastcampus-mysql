@@ -1,6 +1,5 @@
 package com.example.fastcampusmysql.domain.member.service;
 
-import com.example.fastcampusmysql.domain.member.dto.MemberDto;
 import com.example.fastcampusmysql.domain.member.dto.RegisterMemberCommand;
 import com.example.fastcampusmysql.domain.member.entity.MemberJpaEntity;
 import com.example.fastcampusmysql.domain.member.repository.MemberJpaRepository;
@@ -18,12 +17,12 @@ public class MemberWriteService {
      *
      * @return MemberJpaEntity
      */
-    public MemberDto create(RegisterMemberCommand registerMemberCommand) {
+    public MemberJpaEntity register(RegisterMemberCommand registerMemberCommand) {
         // 회원 생성.
         MemberJpaEntity memberJpaEntity = MemberJpaEntity.of(registerMemberCommand);
 
         // 회원 저장.
-        return MemberDto.of(memberJpaRepository.save(memberJpaEntity));
+        return memberJpaRepository.save(memberJpaEntity);
     }
 
 }

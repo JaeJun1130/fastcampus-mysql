@@ -2,7 +2,6 @@ package com.example.fastcampusmysql.controller;
 
 import com.example.fastcampusmysql.domain.member.dto.MemberDto;
 import com.example.fastcampusmysql.domain.member.dto.RegisterMemberCommand;
-import com.example.fastcampusmysql.domain.member.entity.MemberJpaEntity;
 import com.example.fastcampusmysql.domain.member.service.MemberReadService;
 import com.example.fastcampusmysql.domain.member.service.MemberWriteService;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +15,11 @@ public class MemberController {
 
     @GetMapping("/members/{id}")
     public MemberDto getMember(@PathVariable Long id) {
-        return memberReadService.getMember(id);
+        return MemberDto.of(memberReadService.getMember(id));
     }
 
     @PostMapping("/members")
     public MemberDto register(@RequestBody RegisterMemberCommand registerMemberCommand) {
-        return memberWriteService.create(registerMemberCommand);
+        return MemberDto.of(memberWriteService.register(registerMemberCommand));
     }
 }
