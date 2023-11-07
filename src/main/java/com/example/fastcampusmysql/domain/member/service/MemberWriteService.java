@@ -5,8 +5,10 @@ import com.example.fastcampusmysql.domain.member.entity.MemberJpaEntity;
 import com.example.fastcampusmysql.domain.member.repository.MemberJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberWriteService {
     private final MemberJpaRepository memberJpaRepository;
@@ -23,6 +25,14 @@ public class MemberWriteService {
 
         // 회원 저장.
         return memberJpaRepository.save(memberJpaEntity);
+    }
+
+    /**
+     * 회원 이름 변경.
+     */
+    public void changeNickname(Long memberId, String nickname) {
+        MemberJpaEntity memberJpaEntity = memberJpaRepository.findById(memberId).orElseThrow();
+        memberJpaEntity.changeNickname(nickname);
     }
 
 }

@@ -55,10 +55,9 @@ public class MemberJdbcTemplateRepository {
 
         SqlParameterSource parameterSource = new BeanPropertySqlParameterSource(memberJpaEntity);
         Number number = simpleJdbcInsert.executeAndReturnKey(parameterSource);
-        System.out.println("number = " + number);
 
         return MemberJpaEntity.builder()
-                .id(1L)
+                .id(number.longValue())
                 .nickname(memberJpaEntity.getNickname())
                 .email(memberJpaEntity.getEmail())
                 .birthday(memberJpaEntity.getBirthday())
@@ -67,6 +66,10 @@ public class MemberJdbcTemplateRepository {
     }
 
     private MemberJpaEntity update(MemberJpaEntity memberJpaEntity) {
+        String sql = String.format("UPDATE %s set email = :email, nickname = :nickname, birthday = :birthday WHERE id = :id", TABLE);
+        SqlParameterSource params = new BeanPropertySqlParameterSource(memberJpaEntity);
+        namedParameterJdbcTemplate.update(sql,params);
+
         return memberJpaEntity;
     }
 }

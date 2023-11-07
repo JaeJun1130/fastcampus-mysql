@@ -22,4 +22,10 @@ public class MemberController {
     public MemberDto register(@RequestBody RegisterMemberCommand registerMemberCommand) {
         return MemberDto.of(memberWriteService.register(registerMemberCommand));
     }
+
+    @PostMapping("/{id}/name")
+    public MemberDto changeNickname(@PathVariable Long id, @RequestBody String nickname) {
+        memberWriteService.changeNickname(id, nickname);
+        return MemberDto.of(memberReadService.getMember(id));
+    }
 }
