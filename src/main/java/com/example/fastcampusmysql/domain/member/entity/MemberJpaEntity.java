@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
 @Table(name = "member")
 public class MemberJpaEntity {
     private final static Long NAME_MAX_LENGTH = 10L;

@@ -19,21 +19,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberJdbcTemplateRepository {
     private static final String TABLE = "member";
+
+    private static final RowMapper<MemberJpaEntity> memberRowMapper = (ResultSet resultSet, int rowNum) ->
+            MemberJpaEntity.builder()
+                    .id(resultSet.getLong("id"))
+                    .email(resultSet.getString("email"))
+                    .nickname(resultSet.getString("nickname"))
+                    .birthday(resultSet.getObject("birthday", LocalDate.class))
+                    .createdAt(resultSet.getObject("createAt", LocalDateTime.class))
+                    .build();
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public Optional<MemberJpaEntity> findById(Long id) {
         String sql = String.format("SELECT * FROM %s WHERE id = :id", TABLE);
         MapSqlParameterSource parameterSource = new MapSqlParameterSource()
                 .addValue("id", id);
-
-        RowMapper<MemberJpaEntity> memberRowMapper = (ResultSet resultSet, int rowNum) ->
-                MemberJpaEntity.builder()
-                        .id(resultSet.getLong("id"))
-                        .email(resultSet.getString("email"))
-                        .nickname(resultSet.getString("nickname"))
-                        .birthday(resultSet.getObject("birthday", LocalDate.class))
-                        .createdAt(resultSet.getObject("createAt", LocalDateTime.class))
-                        .build();
 
         MemberJpaEntity memberJpaEntity = namedParameterJdbcTemplate.queryForObject(sql, parameterSource, memberRowMapper);
 
